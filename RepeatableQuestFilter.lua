@@ -15,11 +15,13 @@ RepeatableQuestFilter.default = {
     KillSpreeDC = true,
     KillSpreeEP = true,
 }
+RepeatableQuestFilter.filters = {}
 
--------------------------------------------------------------------------------------------------
+---------------------
 --  OnAddOnLoaded  --
--------------------------------------------------------------------------------------------------
-function RepeatableQuestFilter.OnAddOnLoaded(event, addonName)
+---------------------
+
+function RepeatableQuestFilter:OnAddOnLoaded(event, addonName)
     if addonName ~= RepeatableQuestFilter.name then
         return
     end
@@ -33,9 +35,16 @@ end
 function RepeatableQuestFilter:Initialize()
     RepeatableQuestFilter.savedVars = ZO_SavedVars:New("RepeatableQuestFilterVars", RepeatableQuestFilter.version, nil, RepeatableQuestFilter.default)
     RepeatableQuestFilter.CreateSettingsWindow()
+    RepeatableQuestFilter.BuildFilters()
     RepeatableQuestFilter.OverwritePopulateChatterOption(GAMEPAD_INTERACTION)
     RepeatableQuestFilter.OverwritePopulateChatterOption(INTERACTION) -- keyboard
 end
+
+----------------------
+--  Register Events --
+----------------------
+
+EVENT_MANAGER:RegisterForEvent(RepeatableQuestFilter.name, EVENT_ADD_ON_LOADED, RepeatableQuestFilter.OnAddOnLoaded)
 
 ---------------
 -- Libraries --
@@ -49,7 +58,7 @@ local LAM2 = LibStub:GetLibrary("LibAddonMenu-2.0")
 
 -- allow debugging based on changes
 local DebuggerLog = {}
-local function Debugger(key, output)
+function RepeatableQuestFilter:Debugger(key, output)
     if not DebuggerLog[key] or output ~= DebuggerLog[key] then
         DebuggerLog[key] = output
         CHAT_SYSTEM:AddMessage(key .. ": " .. output)
@@ -70,39 +79,41 @@ end)
 -- Data --
 ----------
 
--- zones for usage
-local zones = {
-    [821] = RepeatableQuestFilter.savedVars.EnabledTG, -- Thieves Den
-    [826] = RepeatableQuestFilter.savedVars.EnabledDB, -- Dark Brotherhood Sanctuary
-}
+function RepeatableQuestFilter:BuildFilters()
+    -- zones for usage
+    RepeatableQuestFilter.filters.zones = {
+        [821] = RepeatableQuestFilter.savedVars.EnabledTG, -- Thieves Den
+        [826] = RepeatableQuestFilter.savedVars.EnabledDB, -- Dark Brotherhood Sanctuary
+    }
 
--- localized names of the quest givers
-local questGiver = {
-    ["Tip Board"] = RepeatableQuestFilter.savedVars.EnabledTG, -- Thieves Den
-    ["Marked for Death"] = RepeatableQuestFilter.savedVars.EnabledDB, -- Dark Brotherhood Sanctuary
-}
+    -- localized names of the quest givers
+    RepeatableQuestFilter.filters.questGiver = {
+        ["Tip Board"] = RepeatableQuestFilter.savedVars.EnabledTG, -- Thieves Den
+        ["Marked for Death"] = RepeatableQuestFilter.savedVars.EnabledDB, -- Dark Brotherhood Sanctuary
+    }
 
--- first few characters of the quest dialogs
-local dialog = {
-    ["Rumors that"] = RepeatableQuestFilter.savedVars.CrimeSpree, -- Any Crime Spree
-    ["Esteemed th"] = RepeatableQuestFilter.savedVars.Launder, -- The Covetous Countess
-    ["Demand for "] = RepeatableQuestFilter.savedVars.KillSpreeGC, -- Gold Coast
-    ["The Thalmor"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Auridon
-    ["Back to the"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Grahtwood
-    ["The damn El"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Greenshade
-    ["Malabal Tor"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Malabal Tor
-    ["This one do"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Reaper's March
-    ["The Redguar"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Alik'r Desert
-    ["Strained re"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Bangkorai
-    ["Trade is th"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Glenumbra
-    ["The Covenan"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Rivenspire
-    ["Smuggling i"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Stormhaven
-    ["Never forgi"] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- Deshaan
-    ["The Thanes "] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- Eastmarch
-    ["The Ebonhea"] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- Shadowfen
-    ["Brothers an"] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- Stonefalls
-    ["My exile le"] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- The Rift
-}
+    -- first few characters of the quest dialogs
+    RepeatableQuestFilter.filters.dialog = {
+        ["Rumors that"] = RepeatableQuestFilter.savedVars.CrimeSpree, -- Any Crime Spree
+        ["Esteemed th"] = RepeatableQuestFilter.savedVars.Launder, -- The Covetous Countess
+        ["Demand for "] = RepeatableQuestFilter.savedVars.KillSpreeGC, -- Gold Coast
+        ["The Thalmor"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Auridon
+        ["Back to the"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Grahtwood
+        ["The damn El"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Greenshade
+        ["Malabal Tor"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Malabal Tor
+        ["This one do"] = RepeatableQuestFilter.savedVars.KillSpreeAD, -- Reaper's March
+        ["The Redguar"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Alik'r Desert
+        ["Strained re"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Bangkorai
+        ["Trade is th"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Glenumbra
+        ["The Covenan"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Rivenspire
+        ["Smuggling i"] = RepeatableQuestFilter.savedVars.KillSpreeDC, -- Stormhaven
+        ["Never forgi"] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- Deshaan
+        ["The Thanes "] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- Eastmarch
+        ["The Ebonhea"] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- Shadowfen
+        ["Brothers an"] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- Stonefalls
+        ["My exile le"] = RepeatableQuestFilter.savedVars.KillSpreeEP, -- The Rift
+    }
+end
 
 --------------------
 -- Menu Functions --
@@ -239,19 +250,19 @@ function RepeatableQuestFilter:OverwritePopulateChatterOption(interaction)
     local PopulateChatterOption = interaction.PopulateChatterOption
     interaction.PopulateChatterOption = function(self, index, fun, txt, type, ...)
         -- check if the current target is a filtered quest giver
-        if not questGiver[lastInteractableName] then
+        if not repeatableQuestFilter.filters.questGiver[lastInteractableName] then
             PopulateChatterOption(self, index, fun, txt, type, ...)
             return
         end
         -- the player has to be on an enabled map
-        if not zones[GetZoneId(GetUnitZoneIndex("player"))] then
+        if not repeatableQuestFilter.filters.zones[GetZoneId(GetUnitZoneIndex("player"))] then
             return PopulateChatterOption(self, index, fun, txt, type, ...)
         end
         -- check if the current dialog starts an enabled quest
         local offerText = GetOfferedQuestInfo()
-        Debugger('offer', offerText)
-        Debugger('identifier', string.sub(offerText, 2, 12))
-        if not dialog[string.sub(offerText, 5, 12)] then
+        RepeatableQuestFilter.Debugger('offer', offerText)
+        RepeatableQuestFilter.Debugger('identifier', string.sub(offerText, 2, 12))
+        if not repeatableQuestFilter.filters.dialog[string.sub(offerText, 5, 12)] then
             -- if it is a different quest, only display the goodbye option
             if type ~= CHATTER_GOODBYE then
                 return
