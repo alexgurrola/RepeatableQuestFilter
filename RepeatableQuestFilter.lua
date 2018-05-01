@@ -41,12 +41,6 @@ function RepeatableQuestFilter:Initialize()
     EVENT_MANAGER:UnregisterForEvent(RepeatableQuestFilter.name, EVENT_ADD_ON_LOADED)
 end
 
-----------------------
---  Register Events --
-----------------------
-
-EVENT_MANAGER:RegisterForEvent(RepeatableQuestFilter.name, EVENT_ADD_ON_LOADED, RepeatableQuestFilter.OnAddOnLoaded)
-
 ---------------
 -- Libraries --
 ---------------
@@ -275,3 +269,9 @@ function RepeatableQuestFilter.OverwritePopulateChatterOption(interaction)
         lastInteractableName = nil -- set this variable to nil, so the next dialog step isn't manipulated
     end
 end
+
+----------------------
+--  Register Events --
+----------------------
+
+EVENT_MANAGER:RegisterForEvent(RepeatableQuestFilter.name, EVENT_ADD_ON_LOADED, RepeatableQuestFilter.OnAddOnLoaded)
