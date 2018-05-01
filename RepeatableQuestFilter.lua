@@ -21,7 +21,7 @@ RepeatableQuestFilter.filters = {}
 --  OnAddOnLoaded  --
 ---------------------
 
-function RepeatableQuestFilter:OnAddOnLoaded(event, addonName)
+function RepeatableQuestFilter.OnAddOnLoaded(event, addonName)
     if addonName ~= RepeatableQuestFilter.name then
         return
     end
@@ -38,6 +38,7 @@ function RepeatableQuestFilter:Initialize()
     RepeatableQuestFilter.BuildFilters()
     RepeatableQuestFilter.OverwritePopulateChatterOption(GAMEPAD_INTERACTION)
     RepeatableQuestFilter.OverwritePopulateChatterOption(INTERACTION) -- keyboard
+    EVENT_MANAGER:UnregisterForEvent(RepeatableQuestFilter.name, EVENT_ADD_ON_LOADED)
 end
 
 ----------------------
@@ -58,7 +59,7 @@ local LAM2 = LibStub:GetLibrary("LibAddonMenu-2.0")
 
 -- allow debugging based on changes
 local DebuggerLog = {}
-function RepeatableQuestFilter:Debugger(key, output)
+function RepeatableQuestFilter.Debugger(key, output)
     if not DebuggerLog[key] or output ~= DebuggerLog[key] then
         DebuggerLog[key] = output
         CHAT_SYSTEM:AddMessage(key .. ": " .. output)
@@ -246,7 +247,7 @@ end
 ------------------------
 
 -- override the chatter option function, so only the filtered quests can be started
-function RepeatableQuestFilter:OverwritePopulateChatterOption(interaction)
+function RepeatableQuestFilter.OverwritePopulateChatterOption(interaction)
     local PopulateChatterOption = interaction.PopulateChatterOption
     interaction.PopulateChatterOption = function(self, index, fun, txt, type, ...)
         -- check if the current target is a filtered quest giver
