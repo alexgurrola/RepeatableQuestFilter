@@ -1,0 +1,8 @@
+## APIVersion: 100022
+## Title: Repeatable Quest Filter
+## Version: 1
+## Author: Positron
+## Description: This addon aims to enable focused farming or leveling by filtering repeatable quests.
+
+RepeatableQuestData.lua
+RepeatableQuestFilter.lua
