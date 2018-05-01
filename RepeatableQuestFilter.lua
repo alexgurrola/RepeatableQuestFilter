@@ -1,7 +1,9 @@
---------------
--- Settings --
---------------
+--------------------------
+-- Initialize Variables --
+--------------------------
 
+RepeatableQuestFilter = {}
+RepeatableQuestFilter.name = "RepeatableQuestFilter"
 RepeatableQuestFilter.version = 1
 RepeatableQuestFilter.default = {
     EnabledTG = true,
@@ -14,15 +16,36 @@ RepeatableQuestFilter.default = {
     KillSpreeEP = true,
 }
 
+-------------------------------------------------------------------------------------------------
+--  OnAddOnLoaded  --
+-------------------------------------------------------------------------------------------------
+function RepeatableQuestFilter.OnAddOnLoaded(event, addonName)
+    if addonName ~= RepeatableQuestFilter.name then
+        return
+    end
+    RepeatableQuestFilter:Initialize()
+end
+
+--------------------------
+--  Initialize Function --
+--------------------------
+
+function RepeatableQuestFilter:Initialize()
+    RepeatableQuestFilter.savedVars = ZO_SavedVars:New("RepeatableQuestFilterVars", RepeatableQuestFilter.version, nil, RepeatableQuestFilter.default)
+    RepeatableQuestFilter.CreateSettingsWindow()
+    RepeatableQuestFilter.OverwritePopulateChatterOption(GAMEPAD_INTERACTION)
+    RepeatableQuestFilter.OverwritePopulateChatterOption(INTERACTION) -- keyboard
+end
+
 ---------------
 -- Libraries --
 ---------------
 
 local LAM2 = LibStub:GetLibrary("LibAddonMenu-2.0")
 
------------
--- Tools --
------------
+------------------
+-- Define Tools --
+------------------
 
 -- allow debugging based on changes
 local DebuggerLog = {}
@@ -33,9 +56,9 @@ local function Debugger(key, output)
     end
 end
 
------------
--- Hooks --
------------
+--------------------
+-- Register Hooks --
+--------------------
 
 local lastInteractableName
 ZO_PreHook(FISHING_MANAGER, "StartInteraction", function()
@@ -207,17 +230,12 @@ function RepeatableQuestFilter.CreateSettingsWindow()
     LAM2:RegisterOptionControls("RepeatableQuestFilter", optionsData)
 end
 
-function RepeatableQuestFilter:Initialize()
-    RepeatableQuestFilter.savedVars = ZO_SavedVars:New("RepeatableQuestFilterVars", RepeatableQuestFilter.version, nil, RepeatableQuestFilter.default)
-    RepeatableQuestFilter.CreateSettingsWindow()
-end
-
 ------------------------
 -- Core Functionality --
 ------------------------
 
 -- override the chatter option function, so only the filtered quests can be started
-local function OverwritePopulateChatterOption(interaction)
+function RepeatableQuestFilter:OverwritePopulateChatterOption(interaction)
     local PopulateChatterOption = interaction.PopulateChatterOption
     interaction.PopulateChatterOption = function(self, index, fun, txt, type, ...)
         -- check if the current target is a filtered quest giver
@@ -245,6 +263,3 @@ local function OverwritePopulateChatterOption(interaction)
         lastInteractableName = nil -- set this variable to nil, so the next dialog step isn't manipulated
     end
 end
-
-OverwritePopulateChatterOption(GAMEPAD_INTERACTION)
-OverwritePopulateChatterOption(INTERACTION) -- keyboard
