@@ -35,7 +35,6 @@ end
 function RepeatableQuestFilter.Initialize()
     RepeatableQuestFilter.saveData = ZO_SavedVars:New(RepeatableQuestFilter.name.."Data", RepeatableQuestFilter.configVersion, nil, RepeatableQuestFilter.defaults)
     RepeatableQuestFilter.RepairSaveData()
-    d('saveData:', RepeatableQuestFilter.saveData)
     RepeatableQuestFilter.CreateSettingsWindow()
     --RepeatableQuestFilter.BuildFilters()
     --RepeatableQuestFilter.OverwritePopulateChatterOption(GAMEPAD_INTERACTION)
@@ -49,16 +48,16 @@ end
 
 local LAM2 = LibStub("LibAddonMenu-2.0")
 
-------------------
--- Define Tools --
-------------------
+--------------------
+-- Internal Tools --
+--------------------
 
 -- allow debugging based on changes
-local DebuggerLog = {}
+RepeatableQuestFilter.DebuggerLog = {}
 function RepeatableQuestFilter.Debugger(key, output)
-    if output ~= DebuggerLog[key] then
-        DebuggerLog[key] = output
-        CHAT_SYSTEM:AddMessage(key .. ": " .. output)
+    if output ~= RepeatableQuestFilter.DebuggerLog[key] then
+        RepeatableQuestFilter.DebuggerLog[key] = output
+        --CHAT_SYSTEM:AddMessage(key .. ": " .. output)
         d(RepeatableQuestFilter.name .. "." .. key .. ":", output)
     end
 end
@@ -71,9 +70,9 @@ function RepeatableQuestFilter.RepairSaveData()
     end
 end
 
---------------------
--- Register Hooks --
---------------------
+------------------
+-- System Hooks --
+------------------
 
 local lastInteractableName
 ZO_PreHook(FISHING_MANAGER, "StartInteraction", function()
