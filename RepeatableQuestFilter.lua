@@ -34,6 +34,7 @@ end
 
 function RepeatableQuestFilter:Initialize()
     RepeatableQuestFilter.savedVars = ZO_SavedVars:New("RepeatableQuestFilterVars", RepeatableQuestFilter.version, nil, RepeatableQuestFilter.default)
+    RepeatableQuestFilter.Debugger('SavedVars', RepeatableQuestFilter.savedVars)
     RepeatableQuestFilter.CreateSettingsWindow()
     RepeatableQuestFilter.BuildFilters()
     RepeatableQuestFilter.OverwritePopulateChatterOption(GAMEPAD_INTERACTION)
@@ -56,7 +57,8 @@ local DebuggerLog = {}
 function RepeatableQuestFilter.Debugger(key, output)
     if not DebuggerLog[key] or output ~= DebuggerLog[key] then
         DebuggerLog[key] = output
-        CHAT_SYSTEM:AddMessage(key .. ": " .. output)
+        -- CHAT_SYSTEM:AddMessage(key .. ": " .. output)
+        d(RepeatableQuestFilter.name .. "." .. key .. ":", output)
     end
 end
 
@@ -74,7 +76,8 @@ end)
 -- Data --
 ----------
 
-function RepeatableQuestFilter:BuildFilters()
+function RepeatableQuestFilter.BuildFilters()
+    RepeatableQuestFilter.Debugger('BuildFilters', RepeatableQuestFilter.savedVars)
     -- zones for usage
     RepeatableQuestFilter.filters.zones = {
         [821] = RepeatableQuestFilter.savedVars.EnabledTG, -- Thieves Den
@@ -255,8 +258,8 @@ function RepeatableQuestFilter.OverwritePopulateChatterOption(interaction)
         end
         -- check if the current dialog starts an enabled quest
         local offerText = GetOfferedQuestInfo()
-        RepeatableQuestFilter.Debugger('offer', offerText)
-        RepeatableQuestFilter.Debugger('identifier', string.sub(offerText, 2, 12))
+        RepeatableQuestFilter.Debugger('Offer', offerText)
+        RepeatableQuestFilter.Debugger('Identifier', string.sub(offerText, 2, 12))
         if not repeatableQuestFilter.filters.dialog[string.sub(offerText, 5, 12)] then
             -- if it is a different quest, only display the goodbye option
             if type ~= CHATTER_GOODBYE then
