@@ -1,7 +1,7 @@
 ## Title: Repeatable Quest Filter
 ## Description: Enable focused farming or leveling by filtering repeatable quests.
 ## APIVersion: 100022
-## Version: 1
+## Version: 1.1
 ## SavedVariables: RepeatableQuestFilterData
 ## Author: Positron
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0

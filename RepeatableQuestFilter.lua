@@ -4,10 +4,10 @@
 
 RepeatableQuestFilter = {}
 RepeatableQuestFilter.name = "RepeatableQuestFilter"
-RepeatableQuestFilter.configVersion = 1
+RepeatableQuestFilter.configVersion = 2
 RepeatableQuestFilter.defaults = {
-    EnabledTG = true,
-    EnabledDB = true,
+    ThievesGuild = true,
+    DarkBrotherhood = true,
     CrimeSpree = true,
     Launder = true,
     KillSpreeGC = true,
@@ -21,25 +21,25 @@ RepeatableQuestFilter.filters = {}
 --  OnAddOnLoaded  --
 ---------------------
 
-function RepeatableQuestFilter.OnAddOnLoaded(event, addonName)
+function OnAddOnLoaded(event, addonName)
     if addonName ~= RepeatableQuestFilter.name then
         return
     end
-    RepeatableQuestFilter.Initialize()
+    RepeatableQuestFilter:Initialize(RepeatableQuestFilter)
 end
 
 --------------------------
 --  Initialize Function --
 --------------------------
 
-function RepeatableQuestFilter.Initialize()
-    RepeatableQuestFilter.saveData = ZO_SavedVars:New(RepeatableQuestFilter.name.."Data", RepeatableQuestFilter.configVersion, nil, RepeatableQuestFilter.defaults)
-    RepeatableQuestFilter.RepairSaveData()
-    RepeatableQuestFilter.CreateSettingsWindow()
-    RepeatableQuestFilter.BuildFilters()
-    RepeatableQuestFilter.OverwritePopulateChatterOption(GAMEPAD_INTERACTION)
-    RepeatableQuestFilter.OverwritePopulateChatterOption(INTERACTION) -- keyboard
-    EVENT_MANAGER:UnregisterForEvent(RepeatableQuestFilter.name, EVENT_ADD_ON_LOADED)
+function RepeatableQuestFilter:Initialize(self)
+    self.saveData = ZO_SavedVars:New(self.name.."Data", self.configVersion, nil, self.defaults)
+    self:RepairSaveData(self)
+    self:CreateSettingsWindow(self)
+    self:BuildFilters(self)
+    self:OverwritePopulateChatterOption(self, GAMEPAD_INTERACTION)
+    self:OverwritePopulateChatterOption(self, INTERACTION) -- keyboard
+    EVENT_MANAGER:UnregisterForEvent(self.name, EVENT_ADD_ON_LOADED)
 end
 
 ---------------
@@ -53,19 +53,18 @@ local LAM2 = LibStub("LibAddonMenu-2.0")
 --------------------
 
 -- allow debugging based on changes
-RepeatableQuestFilter.DebuggerLog = {}
-function RepeatableQuestFilter.Debugger(key, output)
-    if output ~= RepeatableQuestFilter.DebuggerLog[key] then
-        RepeatableQuestFilter.DebuggerLog[key] = output
-        --CHAT_SYSTEM:AddMessage(key .. ": " .. output)
-        d(RepeatableQuestFilter.name .. "." .. key .. ":", output)
+RepeatableQuestFilter.debugLog = {}
+function RepeatableQuestFilter:Debug(self, key, output)
+    if output ~= self.debugLog[key] then
+        self.debugLog[key] = output
+        d(self.name .. "." .. key .. ":", output)
     end
 end
 
-function RepeatableQuestFilter.RepairSaveData()
-    for key, value in pairs(RepeatableQuestFilter.defaults) do
-        if(RepeatableQuestFilter.saveData[key] == nil) then
-            RepeatableQuestFilter.saveData[key] = value
+function RepeatableQuestFilter:RepairSaveData(self)
+    for key, value in pairs(self.defaults) do
+        if(self.saveData[key] == nil) then
+            self.saveData[key] = value
         end
     end
 end
@@ -84,39 +83,44 @@ end)
 -- Data --
 ----------
 
-function RepeatableQuestFilter.BuildFilters()
+function RepeatableQuestFilter:BuildFilters(self)
     -- zones for usage
-    RepeatableQuestFilter.filters.zones = {
-        [821] = RepeatableQuestFilter.saveData.EnabledTG, -- Thieves Den
-        [826] = RepeatableQuestFilter.saveData.EnabledDB, -- Dark Brotherhood Sanctuary
+    self.filters.zones = {
+        [821] = self.saveData.ThievesGuild, -- Thieves Den
+        [826] = self.saveData.DarkBrotherhood, -- Dark Brotherhood Sanctuary
     }
 
     -- localized names of the quest givers
-    RepeatableQuestFilter.filters.questGiver = {
-        ["Tip Board"] = RepeatableQuestFilter.saveData.EnabledTG, -- Thieves Den
-        ["Marked for Death"] = RepeatableQuestFilter.saveData.EnabledDB, -- Dark Brotherhood Sanctuary
+    self.filters.questGiver = {
+        ["Tip Board"] = self.saveData.ThievesGuild, -- Thieves Den
+        ["Marked for Death"] = self.saveData.DarkBrotherhood, -- Dark Brotherhood Sanctuary
     }
 
     -- first few characters of the quest dialogs
-    RepeatableQuestFilter.filters.dialog = {
-        ["Rumors that"] = RepeatableQuestFilter.saveData.CrimeSpree, -- Any Crime Spree
-        ["Esteemed th"] = RepeatableQuestFilter.saveData.Launder, -- The Covetous Countess
-        ["Demand for "] = RepeatableQuestFilter.saveData.KillSpreeGC, -- Gold Coast
-        ["The Thalmor"] = RepeatableQuestFilter.saveData.KillSpreeAD, -- Auridon
-        ["Back to the"] = RepeatableQuestFilter.saveData.KillSpreeAD, -- Grahtwood
-        ["The damn El"] = RepeatableQuestFilter.saveData.KillSpreeAD, -- Greenshade
-        ["Malabal Tor"] = RepeatableQuestFilter.saveData.KillSpreeAD, -- Malabal Tor
-        ["This one do"] = RepeatableQuestFilter.saveData.KillSpreeAD, -- Reaper's March
-        ["The Redguar"] = RepeatableQuestFilter.saveData.KillSpreeDC, -- Alik'r Desert
-        ["Strained re"] = RepeatableQuestFilter.saveData.KillSpreeDC, -- Bangkorai
-        ["Trade is th"] = RepeatableQuestFilter.saveData.KillSpreeDC, -- Glenumbra
-        ["The Covenan"] = RepeatableQuestFilter.saveData.KillSpreeDC, -- Rivenspire
-        ["Smuggling i"] = RepeatableQuestFilter.saveData.KillSpreeDC, -- Stormhaven
-        ["Never forgi"] = RepeatableQuestFilter.saveData.KillSpreeEP, -- Deshaan
-        ["The Thanes "] = RepeatableQuestFilter.saveData.KillSpreeEP, -- Eastmarch
-        ["The Ebonhea"] = RepeatableQuestFilter.saveData.KillSpreeEP, -- Shadowfen
-        ["Brothers an"] = RepeatableQuestFilter.saveData.KillSpreeEP, -- Stonefalls
-        ["My exile le"] = RepeatableQuestFilter.saveData.KillSpreeEP, -- The Rift
+    self.filters.dialog = {
+        -- Tip Board
+        ["Rumors that"] = self.saveData.CrimeSpree, -- Any Crime Spree
+        ["Esteemed th"] = self.saveData.Launder, -- The Covetous Countess
+        -- Marked for Death
+        ["Demand for "] = self.saveData.KillSpreeGC, -- Gold Coast
+        -- Aldmeri Dominion
+        ["The Thalmor"] = self.saveData.KillSpreeAD, -- Auridon
+        ["Back to the"] = self.saveData.KillSpreeAD, -- Grahtwood
+        ["The damn El"] = self.saveData.KillSpreeAD, -- Greenshade
+        ["Malabal Tor"] = self.saveData.KillSpreeAD, -- Malabal Tor
+        ["This one do"] = self.saveData.KillSpreeAD, -- Reaper's March
+        -- Daggerfall Covenant
+        ["The Redguar"] = self.saveData.KillSpreeDC, -- Alik'r Desert
+        ["Strained re"] = self.saveData.KillSpreeDC, -- Bangkorai
+        ["Trade is th"] = self.saveData.KillSpreeDC, -- Glenumbra
+        ["The Covenan"] = self.saveData.KillSpreeDC, -- Rivenspire
+        ["Smuggling i"] = self.saveData.KillSpreeDC, -- Stormhaven
+        -- Ebonheart Pact
+        ["Never forgi"] = self.saveData.KillSpreeEP, -- Deshaan
+        ["The Thanes "] = self.saveData.KillSpreeEP, -- Eastmarch
+        ["The Ebonhea"] = self.saveData.KillSpreeEP, -- Shadowfen
+        ["Brothers an"] = self.saveData.KillSpreeEP, -- Stonefalls
+        ["My exile le"] = self.saveData.KillSpreeEP, -- The Rift
     }
 end
 
@@ -124,18 +128,18 @@ end
 -- Menu Functions --
 --------------------
 
-function RepeatableQuestFilter.CreateSettingsWindow()
+function RepeatableQuestFilter:CreateSettingsWindow(self)
     local panelData = {
         type = "panel",
         name = "Quest Filter",
         displayName = "Repeatable Quest Filter",
         author = "Positron",
-        version = "1.0",
+        version = "1.1",
         website = "https://github.com/alexgurrola/RepeatableQuestFilter",
         slashCommand = "/questfilter",
         registerForDefaults = true,
     }
-    local panel = LAM2:RegisterAddonPanel(RepeatableQuestFilter.name.."Config", panelData)
+    local panel = LAM2:RegisterAddonPanel(self.name.."Config", panelData)
     local optionsData = {}
     optionsData[#optionsData + 1] = {
         type = "header",
@@ -150,10 +154,10 @@ function RepeatableQuestFilter.CreateSettingsWindow()
         name = "Filters",
         tooltip = "Turn this off if you want to allow all Thieves Guild Quests through.",
         getFunc = function()
-            return RepeatableQuestFilter.saveData.EnabledTG
+            return self.saveData.ThievesGuild
         end,
         setFunc = function(newValue)
-            RepeatableQuestFilter.saveData.EnabledTG = newValue
+            self.saveData.ThievesGuild = newValue
         end,
     }
     optionsData[#optionsData + 1] = {
@@ -161,10 +165,10 @@ function RepeatableQuestFilter.CreateSettingsWindow()
         name = "Crime Spree",
         tooltip = "Turn this on if you want to allow Thieves Guild Crime Sprees through.",
         getFunc = function()
-            return RepeatableQuestFilter.saveData.CrimeSpree
+            return self.saveData.CrimeSpree
         end,
         setFunc = function(newValue)
-            RepeatableQuestFilter.saveData.CrimeSpree = newValue
+            self.saveData.CrimeSpree = newValue
         end,
     }
     optionsData[#optionsData + 1] = {
@@ -172,10 +176,10 @@ function RepeatableQuestFilter.CreateSettingsWindow()
         name = "Laundering",
         tooltip = "Turn this on if you want to allow The Covetous Countess through.",
         getFunc = function()
-            return RepeatableQuestFilter.saveData.Launder
+            return self.saveData.Launder
         end,
         setFunc = function(newValue)
-            RepeatableQuestFilter.saveData.Launder = newValue
+            self.saveData.Launder = newValue
         end,
     }
     -- Dark Brotherhood Options
@@ -188,10 +192,10 @@ function RepeatableQuestFilter.CreateSettingsWindow()
         name = "Filters",
         tooltip = "Turn this off if you want to allow all Dark Brotherhood Quests through.",
         getFunc = function()
-            return RepeatableQuestFilter.saveData.EnabledDB
+            return self.saveData.DarkBrotherhood
         end,
         setFunc = function(newValue)
-            RepeatableQuestFilter.saveData.EnabledDB = newValue
+            self.saveData.DarkBrotherhood = newValue
         end,
     }
     optionsData[#optionsData + 1] = {
@@ -199,10 +203,10 @@ function RepeatableQuestFilter.CreateSettingsWindow()
         name = "Gold Coast Kill Sprees",
         tooltip = "Turn this on if you want to allow Gold Coast Kill Sprees through.",
         getFunc = function()
-            return RepeatableQuestFilter.saveData.KillSpreeGC
+            return self.saveData.KillSpreeGC
         end,
         setFunc = function(newValue)
-            RepeatableQuestFilter.saveData.KillSpreeGC = newValue
+            self.saveData.KillSpreeGC = newValue
         end,
     }
     optionsData[#optionsData + 1] = {
@@ -210,10 +214,10 @@ function RepeatableQuestFilter.CreateSettingsWindow()
         name = "Aldmeri Dominion Kill Sprees",
         tooltip = "Turn this on if you want to allow Aldmeri Dominion Kill Sprees through.",
         getFunc = function()
-            return RepeatableQuestFilter.saveData.KillSpreeAD
+            return self.saveData.KillSpreeAD
         end,
         setFunc = function(newValue)
-            RepeatableQuestFilter.saveData.KillSpreeAD = newValue
+            self.saveData.KillSpreeAD = newValue
         end,
     }
     optionsData[#optionsData + 1] = {
@@ -221,10 +225,10 @@ function RepeatableQuestFilter.CreateSettingsWindow()
         name = "Daggerfall Covenant Kill Sprees",
         tooltip = "Turn this on if you want to allow Daggerfall Covenant Kill Sprees through.",
         getFunc = function()
-            return RepeatableQuestFilter.saveData.KillSpreeDC
+            return self.saveData.KillSpreeDC
         end,
         setFunc = function(newValue)
-            RepeatableQuestFilter.saveData.KillSpreeDC = newValue
+            self.saveData.KillSpreeDC = newValue
         end,
     }
     optionsData[#optionsData + 1] = {
@@ -232,13 +236,13 @@ function RepeatableQuestFilter.CreateSettingsWindow()
         name = "Ebonheart Pact Kill Sprees",
         tooltip = "Turn this on if you want to allow Ebonheart Pact Kill Sprees through.",
         getFunc = function()
-            return RepeatableQuestFilter.saveData.KillSpreeEP
+            return self.saveData.KillSpreeEP
         end,
         setFunc = function(newValue)
-            RepeatableQuestFilter.saveData.KillSpreeEP = newValue
+            self.saveData.KillSpreeEP = newValue
         end,
     }
-    LAM2:RegisterOptionControls(RepeatableQuestFilter.name.."Config", optionsData)
+    LAM2:RegisterOptionControls(self.name.."Config", optionsData)
 end
 
 ------------------------
@@ -246,21 +250,27 @@ end
 ------------------------
 
 -- override the chatter option function, so only the filtered quests can be started
-function RepeatableQuestFilter.OverwritePopulateChatterOption(interaction)
+function RepeatableQuestFilter:OverwritePopulateChatterOption(self, interaction)
+    local _self = self
     local PopulateChatterOption = interaction.PopulateChatterOption
     interaction.PopulateChatterOption = function(self, index, fun, txt, type, ...)
         -- check if the current target is a filtered quest giver
-        if not repeatableQuestFilter.filters.questGiver[lastInteractableName] then
+        if not _self.filters.questGiver[lastInteractableName] then
             PopulateChatterOption(self, index, fun, txt, type, ...)
             return
         end
         -- the player has to be on an enabled map
-        if not repeatableQuestFilter.filters.zones[GetZoneId(GetUnitZoneIndex("player"))] then
-            return PopulateChatterOption(self, index, fun, txt, type, ...)
+        if not _self.filters.zones[GetZoneId(GetUnitZoneIndex("player"))] then
+          PopulateChatterOption(self, index, fun, txt, type, ...)
+          return
         end
         -- check if the current dialog starts an enabled quest
         local offerText = GetOfferedQuestInfo()
-        if not repeatableQuestFilter.filters.dialog[string.sub(offerText, 5, 12)] then
+        if string.len(offerText) == 0 then
+          PopulateChatterOption(self, index, fun, txt, type, ...)
+          return
+        end
+        if not _self.filters.dialog[string.sub(offerText, 2, 12)] then
             -- if it is a different quest, only display the goodbye option
             if type ~= CHATTER_GOODBYE then
                 return
@@ -277,4 +287,4 @@ end
 --  Register Events --
 ----------------------
 
-EVENT_MANAGER:RegisterForEvent(RepeatableQuestFilter.name, EVENT_ADD_ON_LOADED, RepeatableQuestFilter.OnAddOnLoaded)
+EVENT_MANAGER:RegisterForEvent(RepeatableQuestFilter.name, EVENT_ADD_ON_LOADED, OnAddOnLoaded)

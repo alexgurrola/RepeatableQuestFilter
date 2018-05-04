@@ -5,6 +5,11 @@ Overview
 
 This addon enables focused farming or leveling by filtering __repeatable quests__ received by certain __quest givers__.  At the moment, I am supporting the __Dark Brotherhood__ and __Thieves Guild__ repeatable quests obtained through the *Marked for Death* and *Tip Board*, respectively.
 
+Usage
+-------
+
+Simply spam "E" at the Quest Giver to allow the filter to only accept the quests according to your criteria.
+
 Settings
 --------
 
@@ -15,10 +20,10 @@ Thieves Guild:
 
 Dark Brotherhood:
 
-- Gold Coast
-- Aldmeri Dominion
-- Daggerfall Covenant
-- Ebonheart Pact
+- Gold Coast Kill Sprees
+- Aldmeri Dominion Kill Sprees
+- Daggerfall Covenant Kill Sprees
+- Ebonheart Pact Kill Sprees
 
 Bugs & Requests
 ---------------
