@@ -36,9 +36,9 @@ function RepeatableQuestFilter.Initialize()
     RepeatableQuestFilter.saveData = ZO_SavedVars:New(RepeatableQuestFilter.name.."Data", RepeatableQuestFilter.configVersion, nil, RepeatableQuestFilter.defaults)
     RepeatableQuestFilter.RepairSaveData()
     RepeatableQuestFilter.CreateSettingsWindow()
-    --RepeatableQuestFilter.BuildFilters()
-    --RepeatableQuestFilter.OverwritePopulateChatterOption(GAMEPAD_INTERACTION)
-    --RepeatableQuestFilter.OverwritePopulateChatterOption(INTERACTION) -- keyboard
+    RepeatableQuestFilter.BuildFilters()
+    RepeatableQuestFilter.OverwritePopulateChatterOption(GAMEPAD_INTERACTION)
+    RepeatableQuestFilter.OverwritePopulateChatterOption(INTERACTION) -- keyboard
     EVENT_MANAGER:UnregisterForEvent(RepeatableQuestFilter.name, EVENT_ADD_ON_LOADED)
 end
 
@@ -235,7 +235,7 @@ function RepeatableQuestFilter.CreateSettingsWindow()
             return RepeatableQuestFilter.saveData.KillSpreeEP
         end,
         setFunc = function(newValue)
-            RepeatableQuestFilter.savedVars.KillSpreeEP = newValue
+            RepeatableQuestFilter.saveData.KillSpreeEP = newValue
         end,
     }
     LAM2:RegisterOptionControls(RepeatableQuestFilter.name.."Config", optionsData)
