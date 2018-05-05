@@ -99,6 +99,7 @@ function RepeatableQuestFilter:BuildFilters(self)
     -- first few characters of the quest dialogs
     self.filters.dialog = {
         -- Tip Board
+        ["Some new fa"] = self.saveData.ThievesGuild, -- The Cutpurse's Craft (Required to get Dailies)
         ["Rumors that"] = self.saveData.CrimeSpree, -- Any Crime Spree
         ["Esteemed th"] = self.saveData.Launder, -- The Covetous Countess
         -- Marked for Death
