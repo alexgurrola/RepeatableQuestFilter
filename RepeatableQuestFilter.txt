@@ -1,7 +1,7 @@
 ## Title: Repeatable Quest Filter
 ## Description: Enable focused farming or leveling by filtering repeatable quests.
-## APIVersion: 100022
-## Version: 1.1
+## APIVersion: 100022 100023
+## Version: 1.2
 ## SavedVariables: RepeatableQuestFilterData
 ## Author: Positron
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0
@@ -10,9 +10,16 @@ Libs/LibStub/LibStub.lua
 Libs/LibAddonMenu-2.0/LibAddonMenu-2.0.lua
 Libs/LibAddonMenu-2.0/controls/panel.lua
 Libs/LibAddonMenu-2.0/controls/submenu.lua
+Libs/LibAddonMenu-2.0/controls/button.lua
 Libs/LibAddonMenu-2.0/controls/checkbox.lua
+#Libs/LibAddonMenu-2.0/controls/colorpicker.lua
+#Libs/LibAddonMenu-2.0/controls/custom.lua
 Libs/LibAddonMenu-2.0/controls/description.lua
+#Libs/LibAddonMenu-2.0/controls/dropdown.lua
+#Libs/LibAddonMenu-2.0/controls/editbox.lua
 Libs/LibAddonMenu-2.0/controls/header.lua
+#Libs/LibAddonMenu-2.0/controls/slider.lua
+#Libs/LibAddonMenu-2.0/controls/texture.lua
 Libs/LibAddonMenu-2.0/controls/iconpicker.lua
 Libs/LibAddonMenu-2.0/controls/divider.lua
 RepeatableQuestFilter.lua
