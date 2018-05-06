@@ -10,8 +10,8 @@ Usage
 
 Simply spam "E" at the Quest Giver to allow the filter to only accept the quests according to your criteria.
 
-Settings
---------
+Filters
+-------
 
 Thieves Guild:
 
@@ -20,10 +20,8 @@ Thieves Guild:
 
 Dark Brotherhood:
 
-- Gold Coast Kill Sprees
-- Aldmeri Dominion Kill Sprees
-- Daggerfall Covenant Kill Sprees
-- Ebonheart Pact Kill Sprees
+- Kill Spree
+    - Specific Locations
 
 Bugs & Requests
 ---------------
