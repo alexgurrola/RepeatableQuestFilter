@@ -7,6 +7,7 @@ RepeatableQuestFilter.name = "RepeatableQuestFilter"
 RepeatableQuestFilter.configVersion = 3
 RepeatableQuestFilter.controls = {
     KillSpree = {
+        Neutral = {},
         AldmeriDominion = {},
         DaggerfallCovenant = {},
         EbonheartPact = {},
@@ -16,7 +17,7 @@ RepeatableQuestFilter.defaults = {
     ThievesGuild = true,
     DarkBrotherhood = true,
     CrimeSpree = true,
-    Launder = true,
+    Launder = false,
     KillSpree = {
         -- Gold Coast
         GoldCoast = true,
@@ -177,7 +178,7 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
     local optionsData = {}
     optionsData[#optionsData + 1] = {
         type = "header",
-        name = "Thieves Guild Settings"
+        name = "Thieves Guild"
     }
     --[[
     optionsData[#optionsData + 1] = {
@@ -189,6 +190,7 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
         type = "checkbox",
         name = "Filters",
         tooltip = "Turn this off if you want to allow all Thieves Guild Quests through.",
+        requiresReload = true,
         default = self.defaults.ThievesGuild,
         getFunc = function()
             return self.saveData.ThievesGuild
@@ -201,6 +203,7 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
         type = "checkbox",
         name = "Crime Spree",
         tooltip = "Turn this on if you want to allow Thieves Guild Crime Sprees through.",
+        requiresReload = true,
         default = self.defaults.CrimeSpree,
         getFunc = function()
             return self.saveData.CrimeSpree
@@ -213,6 +216,7 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
         type = "checkbox",
         name = "Laundering",
         tooltip = "Turn this on if you want to allow The Covetous Countess through.",
+        requiresReload = true,
         default = self.defaults.Launder,
         getFunc = function()
             return self.saveData.Launder
@@ -224,12 +228,13 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
     -- Dark Brotherhood Options
     optionsData[#optionsData + 1] = {
         type = "header",
-        name = "Dark Brotherhood Settings"
+        name = "Dark Brotherhood"
     }
     optionsData[#optionsData + 1] = {
         type = "checkbox",
         name = "Filters",
         tooltip = "Turn this off if you want to allow all Dark Brotherhood Quests through.",
+        requiresReload = true,
         default = self.defaults.DarkBrotherhood,
         getFunc = function()
             return self.saveData.DarkBrotherhood
@@ -238,10 +243,18 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
             self.saveData.DarkBrotherhood = newValue
         end,
     }
+    -- Neutral
     optionsData[#optionsData + 1] = {
+        type = "submenu",
+        name = "Neutral Kill Sprees",
+        tooltip = "Decide which places you wish to have Kill Sprees available in Neutral Zones.",
+        controls = self.controls.KillSpree.Neutral
+    }
+    self.controls.KillSpree.Neutral[#self.controls.KillSpree.Neutral + 1] = {
         type = "checkbox",
-        name = "Gold Coast Kill Spree",
+        name = "Gold Coast",
         tooltip = "Turn this on if you want to allow Gold Coast Kill Sprees through.",
+        requiresReload = true,
         default = self.defaults.KillSpree.GoldCoast,
         getFunc = function()
             return self.saveData.KillSpree.GoldCoast
@@ -259,14 +272,67 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
     }
     self.controls.KillSpree.AldmeriDominion[#self.controls.KillSpree.AldmeriDominion + 1] = {
         type = "checkbox",
-        name = "Auridon Kill Sprees",
+        name = "Auridon",
         tooltip = "Turn this on if you want to allow Auridon Kill Sprees through.",
+        requiresReload = true,
         default = self.defaults.KillSpree.Auridon,
         getFunc = function()
             return self.saveData.KillSpree.Auridon
         end,
         setFunc = function(newValue)
             self.saveData.KillSpree.Auridon = newValue
+        end,
+    }
+    self.controls.KillSpree.AldmeriDominion[#self.controls.KillSpree.AldmeriDominion + 1] = {
+        type = "checkbox",
+        name = "Grahtwood",
+        tooltip = "Turn this on if you want to allow Grahtwood Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.Grahtwood,
+        getFunc = function()
+            return self.saveData.KillSpree.Grahtwood
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.Grahtwood = newValue
+        end,
+    }
+    self.controls.KillSpree.AldmeriDominion[#self.controls.KillSpree.AldmeriDominion + 1] = {
+        type = "checkbox",
+        name = "Greenshade",
+        tooltip = "Turn this on if you want to allow Greenshade Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.Greenshade,
+        getFunc = function()
+            return self.saveData.KillSpree.Greenshade
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.Greenshade = newValue
+        end,
+    }
+    self.controls.KillSpree.AldmeriDominion[#self.controls.KillSpree.AldmeriDominion + 1] = {
+        type = "checkbox",
+        name = "Malabal Tor",
+        tooltip = "Turn this on if you want to allow Malabal Tor Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.MalabalTor,
+        getFunc = function()
+            return self.saveData.KillSpree.MalabalTor
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.MalabalTor = newValue
+        end,
+    }
+    self.controls.KillSpree.AldmeriDominion[#self.controls.KillSpree.AldmeriDominion + 1] = {
+        type = "checkbox",
+        name = "Reaper's March",
+        tooltip = "Turn this on if you want to allow Reaper's March Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.ReapersMarch,
+        getFunc = function()
+            return self.saveData.KillSpree.ReapersMarch
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.ReapersMarch = newValue
         end,
     }
     -- Daggerfall Covenant
@@ -278,14 +344,67 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
     }
     self.controls.KillSpree.DaggerfallCovenant[#self.controls.KillSpree.DaggerfallCovenant + 1] = {
         type = "checkbox",
-        name = "Alik'r Desert Kill Sprees",
+        name = "Alik'r Desert",
         tooltip = "Turn this on if you want to allow Alik'r Desert Kill Sprees through.",
+        requiresReload = true,
         default = self.defaults.KillSpree.AlikrDesert,
         getFunc = function()
             return self.saveData.KillSpree.AlikrDesert
         end,
         setFunc = function(newValue)
             self.saveData.KillSpree.AlikrDesert = newValue
+        end,
+    }
+    self.controls.KillSpree.DaggerfallCovenant[#self.controls.KillSpree.DaggerfallCovenant + 1] = {
+        type = "checkbox",
+        name = "Bangkorai",
+        tooltip = "Turn this on if you want to allow Bangkorai Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.Bangkorai,
+        getFunc = function()
+            return self.saveData.KillSpree.Bangkorai
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.Bangkorai = newValue
+        end,
+    }
+    self.controls.KillSpree.DaggerfallCovenant[#self.controls.KillSpree.DaggerfallCovenant + 1] = {
+        type = "checkbox",
+        name = "Glenumbra",
+        tooltip = "Turn this on if you want to allow Glenumbra Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.Glenumbra,
+        getFunc = function()
+            return self.saveData.KillSpree.Glenumbra
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.Glenumbra = newValue
+        end,
+    }
+    self.controls.KillSpree.DaggerfallCovenant[#self.controls.KillSpree.DaggerfallCovenant + 1] = {
+        type = "checkbox",
+        name = "Rivenspire",
+        tooltip = "Turn this on if you want to allow Rivenspire Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.Rivenspire,
+        getFunc = function()
+            return self.saveData.KillSpree.Rivenspire
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.Rivenspire = newValue
+        end,
+    }
+    self.controls.KillSpree.DaggerfallCovenant[#self.controls.KillSpree.DaggerfallCovenant + 1] = {
+        type = "checkbox",
+        name = "Stormhaven",
+        tooltip = "Turn this on if you want to allow Stormhaven Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.Stormhaven,
+        getFunc = function()
+            return self.saveData.KillSpree.Stormhaven
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.Stormhaven = newValue
         end,
     }
     -- Ebonheart Pact
@@ -297,14 +416,82 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
     }
     self.controls.KillSpree.EbonheartPact[#self.controls.KillSpree.EbonheartPact + 1] = {
         type = "checkbox",
-        name = "Deshaan Kill Sprees",
+        name = "Deshaan",
         tooltip = "Turn this on if you want to allow Deshaan Kill Sprees through.",
-        default = self.defaults.ThievesGuild,
+        requiresReload = true,
+        default = self.defaults.KillSpree.Deshaan,
         getFunc = function()
             return self.saveData.KillSpree.Deshaan
         end,
         setFunc = function(newValue)
             self.saveData.KillSpree.Deshaan = newValue
+        end,
+    }
+    self.controls.KillSpree.EbonheartPact[#self.controls.KillSpree.EbonheartPact + 1] = {
+        type = "checkbox",
+        name = "Eastmarch",
+        tooltip = "Turn this on if you want to allow Eastmarch Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.Eastmarch,
+        getFunc = function()
+            return self.saveData.KillSpree.Eastmarch
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.Eastmarch = newValue
+        end,
+    }
+    self.controls.KillSpree.EbonheartPact[#self.controls.KillSpree.EbonheartPact + 1] = {
+        type = "checkbox",
+        name = "Shadowfen",
+        tooltip = "Turn this on if you want to allow Shadowfen Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.Shadowfen,
+        getFunc = function()
+            return self.saveData.KillSpree.Shadowfen
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.Shadowfen = newValue
+        end,
+    }
+    self.controls.KillSpree.EbonheartPact[#self.controls.KillSpree.EbonheartPact + 1] = {
+        type = "checkbox",
+        name = "Stonefalls",
+        tooltip = "Turn this on if you want to allow Stonefalls Kill Sprees through.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.Stonefalls,
+        getFunc = function()
+            return self.saveData.KillSpree.Stonefalls
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.Stonefalls = newValue
+        end,
+    }
+    self.controls.KillSpree.EbonheartPact[#self.controls.KillSpree.EbonheartPact + 1] = {
+        type = "checkbox",
+        name = "The Rift",
+        tooltip = "Turn this on if you want to allow Kill Sprees through in The Rift.",
+        requiresReload = true,
+        default = self.defaults.KillSpree.TheRift,
+        getFunc = function()
+            return self.saveData.KillSpree.TheRift
+        end,
+        setFunc = function(newValue)
+            self.saveData.KillSpree.TheRift = newValue
+        end,
+    }
+    -- Other Actions
+    optionsData[#optionsData + 1] = {
+        type = "header",
+        name = "Other Actions"
+    }
+    -- Donation Button
+    optionsData[#optionsData + 1] = {
+        type = "button",
+        name = "Donate Some Gold",
+        tooltip = "This will build a letter to the Author for Donation Purposes.",
+        requiresReload = true,
+        func = function()
+            SendMail("@PositronXX", "Donation", "I really enjoyed your work with Repeatable Quest Filter.  Keep the updates coming!")
         end,
     }
     LAM2:RegisterOptionControls(self.name .. "Config", optionsData)
