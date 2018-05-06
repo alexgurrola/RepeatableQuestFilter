@@ -491,7 +491,15 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
         tooltip = "This will build a letter to the Author for Donation Purposes.",
         requiresReload = true,
         func = function()
-            SendMail("@PositronXX", "Donation", "I really enjoyed your work with Repeatable Quest Filter.  Keep the updates coming!")
+            MAIL_SEND:ClearFields()
+            MAIL_SEND.to:SetText("@PositronXX")
+            MAIL_SEND.subject:SetText("Donation")
+            MAIL_SEND.body:SetText("I really enjoyed your work with Repeatable Quest Filter.  Keep the updates coming!")
+            SCENE_MANAGER:CallWhen("mailSend", SCENE_SHOWN, function()
+                ZO_MailSendBodyField:TakeFocus()
+            end)
+            ZO_MainMenuSceneGroupBar.m_object:SelectDescriptor("mailSend")
+            --ZO_MailInteractionFragment:Show()
         end,
     }
     LAM2:RegisterOptionControls(self.name .. "Config", optionsData)
