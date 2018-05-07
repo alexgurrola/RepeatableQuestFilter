@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
-- Donation Button
 - Changelog
+- Donation Button
 
 ### Changed
 - Nested Control Settings

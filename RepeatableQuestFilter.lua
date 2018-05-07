@@ -487,19 +487,24 @@ function RepeatableQuestFilter:CreateSettingsWindow(self)
     -- Donation Button
     optionsData[#optionsData + 1] = {
         type = "button",
-        name = "Donate Some Gold",
-        tooltip = "This will build a letter to the Author for Donation Purposes.",
-        requiresReload = true,
+        name = "Small Donation",
+        tooltip = "This will compose appreciation mail for @PositronXX.  You can either accept the prompt directly or decline the transaction and mail a custom letter in the Outbox.",
         func = function()
+            local wallet = GetCurrencyAmount(CURT_MONEY, CURRENCY_LOCATION_CHARACTER)
+            local tithe = math.floor(wallet / 10)
             MAIL_SEND:ClearFields()
             MAIL_SEND.to:SetText("@PositronXX")
-            MAIL_SEND.subject:SetText("Donation")
-            MAIL_SEND.body:SetText("I really enjoyed your work with Repeatable Quest Filter.  Keep the updates coming!")
+            MAIL_SEND.subject:SetText("Donation to Quest Filter")
+            MAIL_SEND.body:SetText("Keep the updates coming!")
+            MAIL_SEND:SetSendMoneyMode(true)
+            MAIL_SEND:AttachMoney(0, tithe)
+            MAIL_SEND:UpdateMoneyAttachment()
+            MAIL_SEND:UpdatePostageMoney()
             SCENE_MANAGER:CallWhen("mailSend", SCENE_SHOWN, function()
                 ZO_MailSendBodyField:TakeFocus()
             end)
             ZO_MainMenuSceneGroupBar.m_object:SelectDescriptor("mailSend")
-            --ZO_MailInteractionFragment:Show()
+            MAIL_SEND:Send()
         end,
     }
     LAM2:RegisterOptionControls(self.name .. "Config", optionsData)
